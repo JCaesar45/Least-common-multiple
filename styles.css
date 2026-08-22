@@ -1,830 +1,254 @@
-:root {
-  --bg-void: #08070b;
-  --bg-ink: #0f0d14;
-  --bg-panel: #17141f;
-  --bg-panel-hover: #1e1a29;
-  --text-primary: #f3f0e7;
-  --text-secondary: #9c96ad;
-  --accent-gold: #d4af37;
-  --accent-gold-dim: #8f7729;
-  --accent-rose: #c25e7c;
-  --accent-teal: #4ecdc4;
-  --border-subtle: rgba(243, 240, 231, 0.08);
-  --shadow-ambient: 0 24px 80px rgba(0, 0, 0, 0.55);
-  --font-display: 'Cinzel', serif;
-  --font-serif: 'Playfair Display', serif;
-  --font-body: 'Source Sans 3', sans-serif;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background: var(--bg-void);
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  line-height: 1.6;
-  overflow-x: hidden;
-  min-height: 100vh;
-}
-
-.grain-overlay {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.055;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
-
-#constellation {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  opacity: 0.45;
-}
-
-.site-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.25rem 4vw;
-  backdrop-filter: blur(14px);
-  background: linear-gradient(180deg, rgba(8, 7, 11, 0.92), rgba(8, 7, 11, 0.65));
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  letter-spacing: 0.08em;
-  color: var(--text-primary);
-}
-
-.logo-mark {
-  color: var(--accent-gold);
-  font-size: 1.6rem;
-  line-height: 1;
-}
-
-.main-nav {
-  display: flex;
-  gap: 2.25rem;
-}
-
-.main-nav a {
-  position: relative;
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-size: 0.92rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  transition: color 0.3s ease;
-}
-
-.main-nav a::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: var(--accent-gold);
-  transition: width 0.35s ease;
-}
-
-.main-nav a:hover {
-  color: var(--text-primary);
-}
-
-.main-nav a:hover::after {
-  width: 100%;
-}
-
-.menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  color: var(--text-primary);
-  font-size: 1.4rem;
-  cursor: pointer;
-}
-
-.hero {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  align-items: center;
-  padding: 8rem 6vw 4rem;
-  gap: 4rem;
-  position: relative;
-}
-
-.hero-content {
-  max-width: 680px;
-}
-
-.eyebrow {
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--accent-gold);
-  margin-bottom: 1.25rem;
-}
-
-.hero-title {
-  font-family: var(--font-serif);
-  font-size: clamp(3.2rem, 7vw, 6.5rem);
-  line-height: 0.98;
-  font-weight: 700;
-  margin-bottom: 1.75rem;
-}
-
-.hero-title .line {
-  display: block;
-}
-
-.hero-title .accent {
-  color: transparent;
-  -webkit-text-stroke: 1px var(--accent-gold);
-  text-stroke: 1px var(--accent-gold);
-}
-
-.hero-subtitle {
-  font-size: 1.15rem;
-  color: var(--text-secondary);
-  max-width: 540px;
-  margin-bottom: 2.5rem;
-  font-weight: 300;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.95rem 2rem;
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-}
-
-.btn-primary {
-  background: var(--accent-gold);
-  color: var(--bg-void);
-  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.18);
-}
-
-.btn-primary:hover {
-  background: #e3c158;
-  box-shadow: 0 12px 38px rgba(212, 175, 55, 0.28);
-}
-
-.btn-secondary {
-  background: var(--bg-panel);
-  color: var(--text-primary);
-  border-color: var(--border-subtle);
-}
-
-.btn-secondary:hover {
-  background: var(--bg-panel-hover);
-  border-color: rgba(243, 240, 231, 0.2);
-}
-
-.btn-ghost {
-  background: transparent;
-  color: var(--text-primary);
-  border-color: var(--border-subtle);
-}
-
-.btn-ghost:hover {
-  border-color: var(--accent-gold);
-  color: var(--accent-gold);
-}
-
-.hero-visual {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.orbital-sculpture {
-  position: relative;
-  width: 340px;
-  height: 340px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ring {
-  position: absolute;
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  border-radius: 50%;
-  animation: orbit 18s linear infinite;
-}
-
-.ring-1 {
-  width: 100%;
-  height: 100%;
-  animation-duration: 22s;
-}
-
-.ring-2 {
-  width: 72%;
-  height: 72%;
-  border-color: rgba(194, 94, 124, 0.3);
-  animation-duration: 16s;
-  animation-direction: reverse;
-}
-
-.ring-3 {
-  width: 44%;
-  height: 44%;
-  border-color: rgba(78, 205, 196, 0.3);
-  animation-duration: 11s;
-}
-
-.core {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, var(--accent-gold), var(--accent-gold-dim));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--bg-void);
-  font-size: 1.1rem;
-  letter-spacing: 0.05em;
-  box-shadow: 0 0 60px rgba(212, 175, 55, 0.35);
-}
-
-@keyframes orbit {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.section-header {
-  text-align: center;
-  max-width: 760px;
-  margin: 0 auto 4rem;
-}
-
-.section-number {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  letter-spacing: 0.2em;
-  color: var(--accent-gold);
-  margin-bottom: 0.75rem;
-}
-
-.section-header h2 {
-  font-family: var(--font-serif);
-  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
-  margin-bottom: 1rem;
-  line-height: 1.1;
-}
-
-.section-header p {
-  color: var(--text-secondary);
-  font-size: 1.1rem;
-}
-
-.section-header.dark h2 {
-  color: var(--text-primary);
-}
-
-.section-header.dark p {
-  color: #b8b2c7;
-}
-
-.calculator-section {
-  padding: 8rem 6vw;
-}
-
-.calculator-card {
-  max-width: 900px;
-  margin: 0 auto;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
-  padding: 3rem;
-  box-shadow: var(--shadow-ambient);
-  position: relative;
-}
-
-.calculator-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent-gold), var(--accent-rose), var(--accent-teal));
-}
-
-.input-zone {
-  margin-bottom: 1.75rem;
-}
-
-.input-label {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent-gold);
-  margin-bottom: 0.65rem;
-}
-
-#lcm-input {
-  width: 100%;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--border-subtle);
-  border-radius: 2px;
-  padding: 1.1rem 1.25rem;
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  font-size: 1.15rem;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-#lcm-input:focus {
-  border-color: var(--accent-gold);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.08);
-}
-
-.input-meta {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.75rem;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-.runtime-badge {
-  background: rgba(212, 175, 55, 0.1);
-  color: var(--accent-gold);
-  padding: 0.2rem 0.65rem;
-  border-radius: 2px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-
-.action-row {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2.25rem;
-  flex-wrap: wrap;
-}
-
-.result-zone {
-  background: rgba(0, 0, 0, 0.18);
-  border: 1px dashed var(--border-subtle);
-  border-radius: 2px;
-  padding: 2rem;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.result-label {
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
-}
-
-.result-value {
-  font-family: var(--font-serif);
-  font-size: clamp(2.6rem, 6vw, 4.5rem);
-  font-weight: 700;
-  color: var(--accent-gold);
-  line-height: 1.1;
-  min-height: 1.2em;
-}
-
-.result-steps {
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  font-style: italic;
-  min-height: 1.5em;
-}
-
-.runtime-tabs {
-  display: flex;
-  gap: 0.5rem;
-  border-top: 1px solid var(--border-subtle);
-  padding-top: 1.5rem;
-}
-
-.tab {
-  background: transparent;
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  padding: 0.55rem 1.1rem;
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.25s ease;
-}
-
-.tab:hover {
-  border-color: rgba(243, 240, 231, 0.25);
-  color: var(--text-primary);
-}
-
-.tab.active {
-  background: var(--accent-gold);
-  border-color: var(--accent-gold);
-  color: var(--bg-void);
-}
-
-.theory-section {
-  padding: 8rem 6vw;
-  background: linear-gradient(180deg, var(--bg-ink), var(--bg-void));
-}
-
-.theory-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.theory-card {
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
-  padding: 2.25rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.theory-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
-}
-
-.theory-card.featured {
-  border-color: rgba(212, 175, 55, 0.35);
-  background: linear-gradient(180deg, var(--bg-panel), rgba(212, 175, 55, 0.04));
-}
-
-.theory-card h3 {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: var(--text-primary);
-}
-
-.theory-card p {
-  color: var(--text-secondary);
-  font-size: 0.98rem;
-}
-
-.theory-card em {
-  color: var(--accent-teal);
-  font-style: normal;
-}
-
-.formula {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  font-size: 1.15rem;
-  margin: 1.5rem 0;
-  color: var(--text-primary);
-}
-
-.fraction {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.fraction .top {
-  border-bottom: 1px solid var(--accent-gold);
-  padding-bottom: 0.15rem;
-  margin-bottom: 0.15rem;
-}
-
-.fraction .bottom {
-  color: var(--accent-gold);
-}
-
-.architecture-section {
-  padding: 8rem 6vw;
-}
-
-.code-showcase {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.4fr 0.6fr;
-  gap: 2.5rem;
-  align-items: start;
-}
-
-.code-window {
-  background: #120f18;
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: var(--shadow-ambient);
-}
-
-.code-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.9rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.dot.red { background: #ff5f57; }
-.dot.yellow { background: #febc2e; }
-.dot.green { background: #28c840; }
-
-.filename {
-  margin-left: auto;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  font-family: 'SF Mono', monospace;
-}
-
-.code-body {
-  padding: 1.5rem;
-  margin: 0;
-  overflow-x: auto;
-  font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 0.9rem;
-  line-height: 1.65;
-  color: #d6d1e8;
-  min-height: 320px;
-}
-
-.code-body code {
-  font-family: inherit;
-}
-
-.keyword { color: #c792ea; }
-.function { color: #82aaff; }
-.string { color: #c3e88d; }
-.number { color: #f78c6c; }
-.comment { color: #676e95; font-style: italic; }
-.operator { color: #89ddff; }
-
-.implementation-notes {
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
-  padding: 2rem;
-}
-
-.implementation-notes h3 {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  margin-bottom: 1.25rem;
-}
-
-.implementation-notes ul {
-  list-style: none;
-}
-
-.implementation-notes li {
-  position: relative;
-  padding-left: 1.25rem;
-  margin-bottom: 1rem;
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-}
-
-.implementation-notes li::before {
-  content: '•';
-  position: absolute;
-  left: 0;
-  color: var(--accent-gold);
-}
-
-.implementation-notes code {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 0.15rem 0.35rem;
-  border-radius: 2px;
-  color: var(--accent-teal);
-  font-family: 'SF Mono', monospace;
-  font-size: 0.85rem;
-}
-
-.pricing-section {
-  padding: 8rem 6vw;
-  background: linear-gradient(180deg, var(--bg-void), var(--bg-ink));
-}
-
-.pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.price-card {
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
-  padding: 2.5rem 2rem;
-  text-align: center;
-  position: relative;
-  transition: transform 0.3s ease, border-color 0.3s ease;
-}
-
-.price-card:hover {
-  transform: translateY(-6px);
-}
-
-.price-card.premium {
-  border-color: var(--accent-gold);
-  background: linear-gradient(180deg, var(--bg-panel), rgba(212, 175, 55, 0.05));
-}
-
-.ribbon {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--accent-gold);
-  color: var(--bg-void);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.35rem 1rem;
-  border-radius: 2px;
-}
-
-.price-card h3 {
-  font-family: var(--font-serif);
-  font-size: 1.7rem;
-  margin-bottom: 0.75rem;
-}
-
-.price {
-  font-family: var(--font-display);
-  font-size: 3rem;
-  color: var(--accent-gold);
-  margin-bottom: 1.5rem;
-}
-
-.price-card ul {
-  list-style: none;
-  margin-bottom: 2rem;
-}
-
-.price-card li {
-  color: var(--text-secondary);
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--border-subtle);
-  font-size: 0.95rem;
-}
-
-.price-card li:last-child {
-  border-bottom: none;
-}
-
-.site-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2.5rem 6vw;
-  border-top: 1px solid var(--border-subtle);
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-}
-
-.footer-left {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-family: var(--font-display);
-}
-
-.footer-right {
-  display: flex;
-  align-items: center;
-  gap: 1.75rem;
-}
-
-.footer-link {
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.25s ease;
-}
-
-.footer-link:hover {
-  color: var(--accent-gold);
-}
-
-@media (max-width: 1024px) {
-  .hero {
-    grid-template-columns: 1fr;
-    text-align: center;
-    padding-top: 10rem;
-  }
-  .hero-content {
-    max-width: none;
-  }
-  .hero-subtitle {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .hero-actions {
-    justify-content: center;
-  }
-  .orbital-sculpture {
-    width: 260px;
-    height: 260px;
-  }
-  .theory-grid,
-  .pricing-grid {
-    grid-template-columns: 1fr;
-  }
-  .code-showcase {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .main-nav {
-    display: none;
-  }
-  .menu-toggle {
-    display: block;
-  }
-  .hero {
-    padding: 8rem 5vw 4rem;
-  }
-  .calculator-card {
-    padding: 1.75rem;
-  }
-  .action-row {
-    flex-direction: column;
-  }
-  .runtime-tabs {
-    flex-wrap: wrap;
-  }
-  .site-footer {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LCM Luxe | Least Common Multiple Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Source+Sans+3:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="grain-overlay"></div>
+    <canvas id="constellation"></canvas>
+
+    <header class="site-header">
+      <div class="logo" aria-label="LCM Luxe">
+        <span class="logo-mark">&#x223A;</span>
+        <span class="logo-text">LCM Luxe</span>
+      </div>
+      <nav class="main-nav">
+        <a href="#calculator">Calculator</a>
+        <a href="#theory">Theory</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#pricing">Access</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Open menu">&#x2630;</button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <p class="eyebrow">Algorithmic elegance, distilled</p>
+          <h1 class="hero-title">
+            <span class="line">The least</span>
+            <span class="line accent">common</span>
+            <span class="line">multiple</span>
+          </h1>
+          <p class="hero-subtitle">
+            A production-grade, multi-runtime engine that computes LCM across
+            arrays with mathematical precision. Built for engineers, presented
+            for connoisseurs.
+          </p>
+          <div class="hero-actions">
+            <a href="#calculator" class="btn btn-primary">Launch Calculator</a>
+            <a
+              href="https://github.com/JCaesar45/Least-common-multiple"
+              target="_blank"
+              rel="noopener"
+              class="btn btn-ghost"
+            >
+              View on GitHub
+            </a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="orbital-sculpture" aria-hidden="true">
+            <div class="ring ring-1"></div>
+            <div class="ring ring-2"></div>
+            <div class="ring ring-3"></div>
+            <div class="core">LCM</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="calculator" class="calculator-section">
+        <div class="section-header">
+          <span class="section-number">01</span>
+          <h2>Universal Calculator</h2>
+          <p>
+            Enter any comma-separated integers. Zero-aware. Negative-tolerant.
+            Array-optimized.
+          </p>
+        </div>
+
+        <div class="calculator-card">
+          <div class="input-zone">
+            <label for="lcm-input" class="input-label">Integer sequence</label>
+            <input
+              id="lcm-input"
+              type="text"
+              placeholder="e.g. -50, 25, -45, -18, 90, 447"
+              autocomplete="off"
+            />
+            <div class="input-meta">
+              <span id="input-status">Awaiting input</span>
+              <span id="runtime-badge" class="runtime-badge">JavaScript</span>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button id="btn-compute" class="btn btn-primary">
+              Compute LCM
+            </button>
+            <button id="btn-random" class="btn btn-secondary">
+              Random Test
+            </button>
+            <button id="btn-clear" class="btn btn-ghost">Clear</button>
+          </div>
+
+          <div class="result-zone">
+            <div class="result-label">Least Common Multiple</div>
+            <div id="result-value" class="result-value">0</div>
+            <div id="result-steps" class="result-steps"></div>
+          </div>
+
+          <div class="runtime-tabs">
+            <button class="tab active" data-runtime="js">JavaScript</button>
+            <button class="tab" data-runtime="ts">TypeScript</button>
+            <button class="tab" data-runtime="py">Python</button>
+            <button class="tab" data-runtime="java">Java</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="theory" class="theory-section">
+        <div class="section-header dark">
+          <span class="section-number">02</span>
+          <h2>Mathematical Foundation</h2>
+          <p>
+            Why LCM matters, and why our implementation is provably correct.
+          </p>
+        </div>
+        <div class="theory-grid">
+          <article class="theory-card">
+            <h3>GCD Foundation</h3>
+            <p>
+              The Euclidean algorithm computes the greatest common divisor in
+              <em>O(log min(m, n))</em>
+              time. It is the oldest nontrivial algorithm still in widespread
+              use (Knuth, 1997, p. 335).
+            </p>
+          </article>
+          <article class="theory-card featured">
+            <h3>LCM Identity</h3>
+            <div class="formula">
+              <span>lcm(m, n) =</span>
+              <span class="fraction">
+                <span class="top">|m &times; n|</span>
+                <span class="bottom">gcd(m, n)</span>
+              </span>
+            </div>
+            <p>
+              Pairwise reduction is associative, so we fold over the array
+              left-to-right without loss of generality (Rosen, 2019, p. 237).
+            </p>
+          </article>
+          <article class="theory-card">
+            <h3>Zero Handling</h3>
+            <p>
+              By convention, lcm(m, 0) = 0. We short-circuit the reduce to avoid
+              division by zero and return the mathematically accepted sentinel
+              value.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="architecture" class="architecture-section">
+        <div class="section-header">
+          <span class="section-number">03</span>
+          <h2>Multi-Runtime Architecture</h2>
+          <p>
+            One algorithm. Four idiomatic implementations. Unified presentation.
+          </p>
+        </div>
+        <div class="code-showcase">
+          <div class="code-window">
+            <div class="code-header">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+              <span id="code-filename" class="filename">lcm.js</span>
+            </div>
+            <pre id="code-body" class="code-body"><code></code></pre>
+          </div>
+          <div class="implementation-notes">
+            <h3>Implementation Notes</h3>
+            <ul id="impl-notes">
+              <li>
+                Recursive Euclidean GCD keeps the call stack shallow due to
+                logarithmic depth.
+              </li>
+              <li>
+                Arrow functions and
+                <code>Array.prototype.reduce</code>
+                express the fold idiomatically.
+              </li>
+              <li>Zero short-circuit prevents undefined behavior.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing" class="pricing-section">
+        <div class="section-header">
+          <span class="section-number">04</span>
+          <h2>Access Tiers</h2>
+          <p>Choose the license that matches your production velocity.</p>
+        </div>
+        <div class="pricing-grid">
+          <div class="price-card">
+            <h3>Observer</h3>
+            <div class="price">$0</div>
+            <ul>
+              <li>Browser calculator</li>
+              <li>All four code samples</li>
+              <li>Community support</li>
+            </ul>
+            <button class="btn btn-ghost">Get Started</button>
+          </div>
+          <div class="price-card premium">
+            <div class="ribbon">Most Popular</div>
+            <h3>Engineer</h3>
+            <div class="price">$49</div>
+            <ul>
+              <li>Source download</li>
+              <li>Backend API module</li>
+              <li>Unit test suite</li>
+            </ul>
+            <button class="btn btn-primary">Purchase</button>
+          </div>
+          <div class="price-card">
+            <h3>Enterprise</h3>
+            <div class="price">Custom</div>
+            <ul>
+              <li>Dedicated support</li>
+              <li>Custom runtimes</li>
+              <li>SLA guarantee</li>
+            </ul>
+            <button class="btn btn-secondary">Contact Sales</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-left">
+        <span class="logo-mark">&#x223A;</span>
+        <span>LCM Luxe</span>
+      </div>
+      <div class="footer-right">
+        <span>Built with precision.</span>
+        <a href="#" class="footer-link">Documentation</a>
+        <a href="#" class="footer-link">Privacy</a>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
