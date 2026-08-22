@@ -1,13 +1,13 @@
 (() => {
-  'use strict';
+  "use strict";
 
   const codeSamples = {
     js: {
-      filename: 'lcm.js',
+      filename: "lcm.js",
       notes: [
-        'Recursive Euclidean GCD keeps the call stack shallow due to logarithmic depth.',
-        'Arrow functions and Array.prototype.reduce express the fold idiomatically.',
-        'Zero short-circuit prevents undefined behavior.'
+        "Recursive Euclidean GCD keeps the call stack shallow due to logarithmic depth.",
+        "Arrow functions and Array.prototype.reduce express the fold idiomatically.",
+        "Zero short-circuit prevents undefined behavior."
       ],
       source: `function LCM(A) {
   if (A.some(x => x === 0)) return 0;
@@ -19,11 +19,11 @@
 }`
     },
     ts: {
-      filename: 'lcm.ts',
+      filename: "lcm.ts",
       notes: [
-        'Explicit number[] typing guards against mixed-type arrays.',
-        'ReadonlyArray prevents accidental mutation of the input sequence.',
-        'The recursive GCD is tail-call friendly in modern runtimes.'
+        "Explicit number[] typing guards against mixed-type arrays.",
+        "ReadonlyArray prevents accidental mutation of the input sequence.",
+        "The recursive GCD is tail-call friendly in modern runtimes."
       ],
       source: `function LCM(A: ReadonlyArray<number>): number {
   if (A.some((x: number) => x === 0)) return 0;
@@ -38,11 +38,11 @@
 }`
     },
     py: {
-      filename: 'lcm.py',
+      filename: "lcm.py",
       notes: [
-        'math.gcd is the optimized CPython implementation.',
-        'functools.reduce expresses the left-fold without manual loops.',
-        'Early zero check uses Python\'s efficient any() short-circuit.'
+        "math.gcd is the optimized CPython implementation.",
+        "functools.reduce expresses the left-fold without manual loops.",
+        "Early zero check uses Python's efficient any() short-circuit."
       ],
       source: `from math import gcd
 from functools import reduce
@@ -56,11 +56,11 @@ def LCM(A: list[int]) -> int:
     return reduce(lcm, A)`
     },
     java: {
-      filename: 'LcmEngine.java',
+      filename: "LcmEngine.java",
       notes: [
-        'BigInteger handles arbitrarily large integer multiples safely.',
-        'abs() and divide() avoid overflow and sign errors.',
-        'Streams provide a declarative fold with reduce().'
+        "BigInteger handles arbitrarily large integer multiples safely.",
+        "abs() and divide() avoid overflow and sign errors.",
+        "Streams provide a declarative fold with reduce()."
       ],
       source: `import java.math.BigInteger;
 import java.util.Arrays;
@@ -88,21 +88,39 @@ public class LcmEngine {
   };
 
   function syntaxHighlight(code, runtime) {
-    const rules = [
-      { regex: /\/\/.*/g, className: 'comment' },
-      { regex: /\b(function|return|if|const|let|var|import|from|public|static|def|class|for|in|any|number|ReadonlyArray|number\[\]|list\[int\]|void|int|throws)\b/g, className: 'keyword' },
-      { regex: /\b(gcd|lcm|LCM|reduce|map|anyMatch|abs|multiply|divide|mod|valueOf|some|Math|BigInteger|ZERO|ONE)\b/g, className: 'function' },
-      { regex: /\b\d+\b/g, className: 'number' },
-      { regex: /[-+*/=%]|=>|\?\?|:/g, className: 'operator' }
-    ];
+    if (!code) return "";
 
     let html = escapeHtml(code);
-    if (runtime === 'py') {
-      html = html.replace(/#.*/g, m => `<span class="comment">${m}</span>`);
+
+    // Handle Python comments separately
+    if (runtime === "py") {
+      html = html.replace(
+        /(#.*?)$/gm,
+        (match) => `<span class="comment">${match}</span>`
+      );
     }
 
-    rules.forEach(rule => {
-      html = html.replace(rule.regex, match => `<span class="${rule.className}">${match}</span>`);
+    const rules = [
+      { regex: /\/\/.*/g, className: "comment" },
+      {
+        regex:
+          /\b(function|return|if|const|let|var|import|from|public|static|def|class|for|in|any|number|ReadonlyArray|number\[\]|list\[int\]|void|int|throws)\b/g,
+        className: "keyword"
+      },
+      {
+        regex:
+          /\b(gcd|lcm|LCM|reduce|map|anyMatch|abs|multiply|divide|mod|valueOf|some|Math|BigInteger|ZERO|ONE)\b/g,
+        className: "function"
+      },
+      { regex: /\b\d+\b/g, className: "number" },
+      { regex: /[-+*/=%]|=>|\?\?|:|\./g, className: "operator" }
+    ];
+
+    rules.forEach((rule) => {
+      html = html.replace(
+        rule.regex,
+        (match) => `<span class="${rule.className}">${match}</span>`
+      );
     });
 
     return html;
@@ -110,15 +128,21 @@ public class LcmEngine {
 
   function escapeHtml(text) {
     return text
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
   }
 
   function parseInput(raw) {
-    const tokens = raw.split(',').map(t => t.trim()).filter(Boolean);
+    if (!raw || raw.trim() === "") return [];
+
+    const tokens = raw
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
     if (tokens.length === 0) return [];
-    return tokens.map(t => {
+
+    return tokens.map((t) => {
       const n = Number(t);
       if (!Number.isFinite(n) || !Number.isInteger(n)) {
         throw new Error(`"${t}" is not a valid integer.`);
@@ -128,39 +152,58 @@ public class LcmEngine {
   }
 
   function computeLCM(values) {
-    if (values.some(x => x === 0)) return 0;
+    if (values.length === 0) return 0;
+    if (values.some((x) => x === 0)) return 0;
 
-    const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
-    const lcm = (a, b) => Math.abs(a * b) / gcd(a, b);
+    // Handle single value case
+    if (values.length === 1) return Math.abs(values[0]);
 
-    return values.reduce((acc, val) => lcm(acc, val), 1);
+    const gcd = (a, b) => {
+      a = Math.abs(a);
+      b = Math.abs(b);
+      while (b !== 0) {
+        [a, b] = [b, a % b];
+      }
+      return a;
+    };
+
+    const lcm = (a, b) => {
+      if (a === 0 || b === 0) return 0;
+      return Math.abs(a * b) / gcd(a, b);
+    };
+
+    return values.reduce((acc, val) => lcm(acc, val));
   }
 
   function formatNumber(n) {
-    return n.toLocaleString('en-US');
+    return n.toLocaleString("en-US");
   }
 
   function renderCode(runtime) {
     const sample = codeSamples[runtime];
-    document.getElementById('code-filename').textContent = sample.filename;
-    document.getElementById('code-body').innerHTML = syntaxHighlight(sample.source, runtime);
+    document.getElementById("code-filename").textContent = sample.filename;
+    document.getElementById("code-body").innerHTML = syntaxHighlight(
+      sample.source,
+      runtime
+    );
 
-    const notesList = document.getElementById('impl-notes');
+    const notesList = document.getElementById("impl-notes");
     notesList.innerHTML = sample.notes
-      .map(note => `<li>${escapeHtml(note)}</li>`)
-      .join('');
+      .map((note) => `<li>${escapeHtml(note)}</li>`)
+      .join("");
 
-    document.getElementById('runtime-badge').textContent = runtime.toUpperCase();
+    document.getElementById("runtime-badge").textContent =
+      runtime.toUpperCase();
   }
 
   function setStatus(text, isError = false) {
-    const el = document.getElementById('input-status');
+    const el = document.getElementById("input-status");
     el.textContent = text;
-    el.style.color = isError ? 'var(--accent-rose)' : 'var(--text-secondary)';
+    el.style.color = isError ? "var(--accent-rose)" : "var(--text-secondary)";
   }
 
   function animateResult(value) {
-    const el = document.getElementById('result-value');
+    const el = document.getElementById("result-value");
     const duration = 600;
     const start = performance.now();
     const from = 0;
@@ -177,52 +220,58 @@ public class LcmEngine {
   }
 
   function handleCompute() {
-    const raw = document.getElementById('lcm-input').value;
-    const stepsEl = document.getElementById('result-steps');
+    const raw = document.getElementById("lcm-input").value;
+    const stepsEl = document.getElementById("result-steps");
 
     try {
       const values = parseInput(raw);
       if (values.length === 0) {
-        setStatus('Enter at least one integer', true);
-        stepsEl.textContent = '';
+        setStatus("Enter at least one integer", true);
+        stepsEl.textContent = "";
         return;
       }
       const result = computeLCM(values);
-      setStatus(`${values.length} integer${values.length > 1 ? 's' : ''} parsed`);
+      setStatus(
+        `${values.length} integer${values.length > 1 ? "s" : ""} parsed`
+      );
       animateResult(result);
-      stepsEl.textContent = `lcm(${values.join(', ')}) = ${formatNumber(result)}`;
+      stepsEl.textContent = `lcm(${values.join(", ")}) = ${formatNumber(result)}`;
     } catch (err) {
       setStatus(err.message, true);
-      stepsEl.textContent = '';
+      stepsEl.textContent = "";
     }
   }
 
   function handleRandom() {
-    const pool = [2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 25, 30, 40, 45, 50, 90];
-    const count = Math.floor(Math.random() * 4) + 3;
+    const pool = [
+      2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 25, 30, 40, 45, 50, 90
+    ];
+    const count = Math.floor(Math.random() * 4) + 2; // Minimum 2 numbers
     const values = [];
     for (let i = 0; i < count; i++) {
       const v = pool[Math.floor(Math.random() * pool.length)];
-      values.push(Math.random() > 0.8 ? -v : v);
+      // Don't include 0 in random tests to avoid edge cases
+      values.push(Math.random() > 0.7 ? -v : v);
     }
-    document.getElementById('lcm-input').value = values.join(', ');
+    document.getElementById("lcm-input").value = values.join(", ");
     handleCompute();
   }
 
   function handleClear() {
-    document.getElementById('lcm-input').value = '';
-    document.getElementById('result-value').textContent = '0';
-    document.getElementById('result-steps').textContent = '';
-    setStatus('Awaiting input');
+    document.getElementById("lcm-input").value = "";
+    document.getElementById("result-value").textContent = "0";
+    document.getElementById("result-steps").textContent = "";
+    setStatus("Awaiting input");
   }
 
   function initConstellation() {
-    const canvas = document.getElementById('constellation');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.getElementById("constellation");
+    const ctx = canvas.getContext("2d");
     let width, height;
     const particles = [];
     const count = 90;
     const maxDistance = 130;
+    let animationId = null;
 
     function resize() {
       width = canvas.width = window.innerWidth;
@@ -241,14 +290,22 @@ public class LcmEngine {
       update() {
         this.x += this.vx;
         this.y += this.vy;
-        if (this.x < 0 || this.x > width) this.vx *= -1;
-        if (this.y < 0 || this.y > height) this.vy *= -1;
+
+        // Fix bouncing to prevent particles from getting stuck
+        if (this.x < 0 || this.x > width) {
+          this.vx *= -1;
+          this.x = Math.max(0, Math.min(width, this.x));
+        }
+        if (this.y < 0 || this.y > height) {
+          this.vy *= -1;
+          this.y = Math.max(0, Math.min(height, this.y));
+        }
       }
 
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(212, 175, 55, 0.45)';
+        ctx.fillStyle = "rgba(212, 175, 55, 0.45)";
         ctx.fill();
       }
     }
@@ -279,63 +336,136 @@ public class LcmEngine {
 
     function loop() {
       ctx.clearRect(0, 0, width, height);
-      particles.forEach(p => { p.update(); p.draw(); });
+      particles.forEach((p) => {
+        p.update();
+        p.draw();
+      });
       drawLines();
-      requestAnimationFrame(loop);
+      animationId = requestAnimationFrame(loop);
     }
 
-    resize();
-    initParticles();
-    window.addEventListener('resize', () => { resize(); initParticles(); });
-    loop();
+    function start() {
+      resize();
+      initParticles();
+      if (animationId) cancelAnimationFrame(animationId);
+      loop();
+    }
+
+    start();
+
+    let resizeTimeout;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        resize();
+        initParticles();
+      }, 150);
+    });
   }
 
   function initTabs() {
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
+    const tabs = document.querySelectorAll(".tab");
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
         renderCode(tab.dataset.runtime);
       });
     });
   }
 
   function initScrollReveal() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12 });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
 
-    document.querySelectorAll('.theory-card, .price-card, .calculator-card, .code-showcase')
-      .forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(24px)';
-        el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+    document
+      .querySelectorAll(
+        ".theory-card, .price-card, .calculator-card, .code-showcase"
+      )
+      .forEach((el) => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(24px)";
+        el.style.transition = "opacity 0.8s ease, transform 0.8s ease";
         observer.observe(el);
       });
 
-    const style = document.createElement('style');
-    style.textContent = '.revealed { opacity: 1 !important; transform: translateY(0) !important; }';
+    const style = document.createElement("style");
+    style.textContent =
+      ".revealed { opacity: 1 !important; transform: translateY(0) !important; }";
     document.head.appendChild(style);
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function initMobileMenu() {
+    const menuToggle = document.querySelector(".menu-toggle");
+    const mainNav = document.querySelector(".main-nav");
+
+    if (menuToggle && mainNav) {
+      menuToggle.addEventListener("click", () => {
+        const isOpen = mainNav.style.display === "flex";
+        mainNav.style.display = isOpen ? "none" : "flex";
+        menuToggle.textContent = isOpen ? "☰" : "✕";
+        menuToggle.setAttribute(
+          "aria-label",
+          isOpen ? "Open menu" : "Close menu"
+        );
+      });
+
+      // Close menu when a link is clicked
+      mainNav.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          if (window.innerWidth <= 768) {
+            mainNav.style.display = "none";
+            menuToggle.textContent = "☰";
+            menuToggle.setAttribute("aria-label", "Open menu");
+          }
+        });
+      });
+
+      // Close menu on window resize
+      let resizeTimeout;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          if (window.innerWidth > 768) {
+            mainNav.style.display = "flex";
+            menuToggle.textContent = "☰";
+            menuToggle.setAttribute("aria-label", "Open menu");
+          } else if (mainNav.style.display === "flex") {
+            mainNav.style.display = "none";
+            menuToggle.textContent = "☰";
+            menuToggle.setAttribute("aria-label", "Open menu");
+          }
+        }, 200);
+      });
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
     initConstellation();
     initTabs();
     initScrollReveal();
-    renderCode('js');
+    initMobileMenu();
+    renderCode("js");
 
-    document.getElementById('btn-compute').addEventListener('click', handleCompute);
-    document.getElementById('btn-random').addEventListener('click', handleRandom);
-    document.getElementById('btn-clear').addEventListener('click', handleClear);
+    document
+      .getElementById("btn-compute")
+      .addEventListener("click", handleCompute);
+    document
+      .getElementById("btn-random")
+      .addEventListener("click", handleRandom);
+    document.getElementById("btn-clear").addEventListener("click", handleClear);
 
-    document.getElementById('lcm-input').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') handleCompute();
+    document.getElementById("lcm-input").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") handleCompute();
     });
   });
 })();
