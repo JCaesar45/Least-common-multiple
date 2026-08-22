@@ -114,4 +114,4 @@ Rosen, K. H. (2019). *Discrete mathematics and its applications* (8th ed.). McGr
 
 ---
 
-Built by LCM Luxe. Algorithmic elegance, distilled.
+Built by Jordan Leturgez
