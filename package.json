@@ -1,0 +1,16 @@
+{
+  "name": "lcm-luxe-platform",
+  "version": "1.0.0",
+  "description": "A sexy, luxurious, high-converting LCM engine with multi-runtime implementations.",
+  "main": "app.js",
+  "scripts": {
+    "serve": "python3 -m http.server 3000",
+    "api": "python3 server.py",
+    "test:py": "pytest",
+    "test:ts": "echo 'Add ts-node to run lcm.ts directly'"
+  },
+  "keywords": ["lcm", "algorithm", "frontend", "fastapi", "typescript", "java"],
+  "author": "LCM Luxe",
+  "license": "MIT",
+  "devDependencies": {}
+}
