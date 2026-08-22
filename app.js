@@ -9,14 +9,7 @@
         "Arrow functions and Array.prototype.reduce express the fold idiomatically.",
         "Zero short-circuit prevents undefined behavior."
       ],
-      source: `function LCM(A) {
-  if (A.some(x => x === 0)) return 0;
-
-  const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
-  const lcm = (a, b) => Math.abs(a * b) / gcd(a, b);
-
-  return A.reduce((acc, val) => lcm(acc, val));
-}`
+      source: `function LCM(A) {\n  if (A.some(x => x === 0)) return 0;\n\n  const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);\n  const lcm = (a, b) => Math.abs(a * b) / gcd(a, b);\n\n  return A.reduce((acc, val) => lcm(acc, val));\n}`
     },
     ts: {
       filename: "lcm.ts",
@@ -25,17 +18,7 @@
         "ReadonlyArray prevents accidental mutation of the input sequence.",
         "The recursive GCD is tail-call friendly in modern runtimes."
       ],
-      source: `function LCM(A: ReadonlyArray<number>): number {
-  if (A.some((x: number) => x === 0)) return 0;
-
-  const gcd = (a: number, b: number): number =>
-    b === 0 ? a : gcd(b, a % b);
-
-  const lcm = (a: number, b: number): number =>
-    Math.abs(a * b) / gcd(a, b);
-
-  return A.reduce((acc, val) => lcm(acc, val));
-}`
+      source: `function LCM(A: ReadonlyArray<number>): number {\n  if (A.some((x: number) => x === 0)) return 0;\n\n  const gcd = (a: number, b: number): number =>\n    b === 0 ? a : gcd(b, a % b);\n\n  const lcm = (a: number, b: number): number =>\n    Math.abs(a * b) / gcd(a, b);\n\n  return A.reduce((acc, val) => lcm(acc, val));\n}`
     },
     py: {
       filename: "lcm.py",
@@ -44,16 +27,7 @@
         "functools.reduce expresses the left-fold without manual loops.",
         "Early zero check uses Python's efficient any() short-circuit."
       ],
-      source: `from math import gcd
-from functools import reduce
-
-def lcm(a: int, b: int) -> int:
-    return abs(a * b) // gcd(a, b)
-
-def LCM(A: list[int]) -> int:
-    if any(x == 0 for x in A):
-        return 0
-    return reduce(lcm, A)`
+      source: `from math import gcd\nfrom functools import reduce\n\ndef lcm(a: int, b: int) -> int:\n    return abs(a * b) // gcd(a, b)\n\ndef LCM(A: list[int]) -> int:\n    if any(x == 0 for x in A):\n        return 0\n    return reduce(lcm, A)`
     },
     java: {
       filename: "LcmEngine.java",
@@ -62,28 +36,7 @@ def LCM(A: list[int]) -> int:
         "abs() and divide() avoid overflow and sign errors.",
         "Streams provide a declarative fold with reduce()."
       ],
-      source: `import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.List;
-
-public class LcmEngine {
-  public static BigInteger gcd(BigInteger a, BigInteger b) {
-    return b.equals(BigInteger.ZERO) ? a : gcd(b, a.mod(b));
-  }
-
-  public static BigInteger lcm(BigInteger a, BigInteger b) {
-    return a.multiply(b).abs().divide(gcd(a, b));
-  }
-
-  public static BigInteger LCM(List<Integer> numbers) {
-    if (numbers.stream().anyMatch(n -> n == 0)) {
-      return BigInteger.ZERO;
-    }
-    return numbers.stream()
-      .map(BigInteger::valueOf)
-      .reduce(BigInteger.ONE, LcmEngine::lcm);
-  }
-}`
+      source: `import java.math.BigInteger;\nimport java.util.Arrays;\nimport java.util.List;\n\npublic class LcmEngine {\n  public static BigInteger gcd(BigInteger a, BigInteger b) {\n    return b.equals(BigInteger.ZERO) ? a : gcd(b, a.mod(b));\n  }\n\n  public static BigInteger lcm(BigInteger a, BigInteger b) {\n    return a.multiply(b).abs().divide(gcd(a, b));\n  }\n\n  public static BigInteger LCM(List<Integer> numbers) {\n    if (numbers.stream().anyMatch(n -> n == 0)) {\n      return BigInteger.ZERO;\n    }\n    return numbers.stream()\n      .map(BigInteger::valueOf)\n      .reduce(BigInteger.ONE, LcmEngine::lcm);\n  }\n}`
     }
   };
 
@@ -92,7 +45,6 @@ public class LcmEngine {
 
     let html = escapeHtml(code);
 
-    // Handle Python comments separately
     if (runtime === "py") {
       html = html.replace(
         /(#.*?)$/gm,
@@ -155,7 +107,6 @@ public class LcmEngine {
     if (values.length === 0) return 0;
     if (values.some((x) => x === 0)) return 0;
 
-    // Handle single value case
     if (values.length === 1) return Math.abs(values[0]);
 
     const gcd = (a, b) => {
@@ -246,11 +197,10 @@ public class LcmEngine {
     const pool = [
       2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 25, 30, 40, 45, 50, 90
     ];
-    const count = Math.floor(Math.random() * 4) + 2; // Minimum 2 numbers
+    const count = Math.floor(Math.random() * 4) + 2;
     const values = [];
     for (let i = 0; i < count; i++) {
       const v = pool[Math.floor(Math.random() * pool.length)];
-      // Don't include 0 in random tests to avoid edge cases
       values.push(Math.random() > 0.7 ? -v : v);
     }
     document.getElementById("lcm-input").value = values.join(", ");
@@ -291,7 +241,6 @@ public class LcmEngine {
         this.x += this.vx;
         this.y += this.vy;
 
-        // Fix bouncing to prevent particles from getting stuck
         if (this.x < 0 || this.x > width) {
           this.vx *= -1;
           this.x = Math.max(0, Math.min(width, this.x));
@@ -419,7 +368,6 @@ public class LcmEngine {
         );
       });
 
-      // Close menu when a link is clicked
       mainNav.querySelectorAll("a").forEach((link) => {
         link.addEventListener("click", () => {
           if (window.innerWidth <= 768) {
@@ -430,7 +378,6 @@ public class LcmEngine {
         });
       });
 
-      // Close menu on window resize
       let resizeTimeout;
       window.addEventListener("resize", () => {
         clearTimeout(resizeTimeout);
@@ -449,7 +396,7 @@ public class LcmEngine {
     }
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  function init() {
     initConstellation();
     initTabs();
     initScrollReveal();
@@ -467,5 +414,11 @@ public class LcmEngine {
     document.getElementById("lcm-input").addEventListener("keydown", (e) => {
       if (e.key === "Enter") handleCompute();
     });
-  });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();
